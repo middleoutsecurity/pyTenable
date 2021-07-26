@@ -6,13 +6,14 @@ import com.tenable.jenkins.Constants
 import com.tenable.jenkins.builds.snyk.*
 import com.tenable.jenkins.builds.nexusiq.*
 
-if (env.BRANCH_NAME == 'master') {
-    def addParameters(final script, def theParams) {
+def addParameters(final script, def theParams) {
+    if (script.env.BRANCH_NAME == 'master') {
         theParams << script.booleanParam(defaultValue: false,
             description: 'Puplish to PYPI!', name: 'PUPBLISH2PYPI')
         theParams
     }
 }
+
 PropertiesHelper.defaultCICDProperties(this, Constants.PROP_NOCONSEC | Constants.PROP_NOSCHEDULE, this.&addParameters)
 
 pythonVersion = [ '3.6', '3.7', '3.8', '3.9' ]
