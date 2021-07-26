@@ -8,13 +8,12 @@ import com.tenable.jenkins.builds.nexusiq.*
 
 def addParameters(final script, def theParams) {
     if (script.env.BRANCH_NAME == 'master') {
-        theParams << script.booleanParam(defaultValue: false,
-            description: 'Puplish to PYPI!', name: 'PUPBLISH2PYPI')
-        theParams
+       theParams << script.booleanParam(defaultValue: false, description: 'Puplish to PYPI!', name: 'PUPBLISH2PYPI')
     }
+    theParams
 }
 if (env.BRANCH_NAME == 'MASTER') {
-    PropertiesHelper.defaultCICDProperties(this,0, this.&addParameters)
+    PropertiesHelper.defaultCICDProperties(this,Constants.PROP_NOCONSEC | Constants.PROP_NOSCHEDULE, this.&addParameters)
 }
 pythonVersion = [ '3.6', '3.7', '3.8', '3.9' ]
 bparams = new BuildParams(this, 1083)
