@@ -6,12 +6,14 @@ import com.tenable.jenkins.Constants
 import com.tenable.jenkins.builds.snyk.*
 import com.tenable.jenkins.builds.nexusiq.*
 
-def addParameters(final script, def theParams) {
-    theParams << script.booleanParam(defaultValue: false,
-        description: 'Puplish to PYPI!', name: 'PUPBLISH2PYPI')
-    theParams
+if (env.BRANCH_NAME == 'master') {
+    def addParameters(final script, def theParams) {
+        theParams << script.booleanParam(defaultValue: false,
+            description: 'Puplish to PYPI!', name: 'PUPBLISH2PYPI')
+        theParams
+    }
 }
-PropertiesHelper.defaultCICDProperties(this, 0, this.&addParameters)
+PropertiesHelper.defaultCICDProperties(this, Constants.PROP_NOCONSEC | Constants.PROP_NOSCHEDULE, this.&addParameters)
 
 pythonVersion = [ '3.6', '3.7', '3.8', '3.9' ]
 bparams = new BuildParams(this, 1083)
@@ -145,7 +147,7 @@ try {
     parallel(tasks)
     common.setResultIfNotSet(Constants.JSUCCESS)
     
-    if (env.BRANCH_NAME == 'master' && params.PUBLISH2PYPI) {
+    if (params.PUBLISH2PYPI) {
         uploadPackagePyPI()
     }
     
