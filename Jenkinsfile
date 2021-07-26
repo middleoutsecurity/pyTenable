@@ -58,6 +58,31 @@ void unittests(String version) {
     }
 }
 
+void uploadPackagePyPI() {
+    node(Constants.DOCKERNODE) {
+        buildsCommon.cleanup()
+        checkout scm
+        withContainer(image: "python:3.6-buster", registry: '', inside: '-u root') {
+            try {
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "PYPIPROD", usernameVariable: 'PYPIUSERNAME', passwordVariable: 'PYPIPASSWORD']]) {
+                    sh
+                    """
+                    rm -rf dist
+                    python setup.py sdist
+                    pip install twine
+                    twine upload --repository-url https://upload.pypi.org/legacy/ --skip-existing dist/* -u ${PYPIUSERNAME} -p ${PYPIPASSWORD}
+                    """
+                }
+            } catch (ex) {
+                throw ex
+            } finally {
+                print("Upload Done successfully")
+            }
+        }
+    }
+}
+
+
 try {
     Map tasks = [: ]
 
@@ -113,8 +138,12 @@ try {
     }
 
     parallel(tasks)
-
     common.setResultIfNotSet(Constants.JSUCCESS)
+    
+    if (env.BRANCH_NAME == 'master' && releaseBuild == 'Yes') {
+        uploadPackagePyPI()
+    }
+    
 } catch (ex) {
     common.logException(ex)
     common.setResultAbortedOrFailure()
