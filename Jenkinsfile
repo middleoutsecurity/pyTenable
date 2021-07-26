@@ -12,9 +12,7 @@ def addParameters(final script, def theParams) {
     }
     theParams
 }
-if (env.BRANCH_NAME == 'MASTER') {
-    PropertiesHelper.defaultCICDProperties(this,Constants.PROP_NOCONSEC | Constants.PROP_NOSCHEDULE, this.&addParameters)
-}
+PropertiesHelper.defaultCICDProperties(this,Constants.PROP_NOCONSEC | Constants.PROP_NOSCHEDULE, this.&addParameters)
 pythonVersion = [ '3.6', '3.7', '3.8', '3.9' ]
 bparams = new BuildParams(this, 1083)
 bparams.channels = '#jenkins-devel'
