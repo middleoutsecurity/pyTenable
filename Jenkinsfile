@@ -5,6 +5,18 @@ import com.tenable.jenkins.common.*
 import com.tenable.jenkins.Constants
 import com.tenable.jenkins.builds.snyk.*
 import com.tenable.jenkins.builds.nexusiq.*
+    
+
+
+def addParameters(final script, def theParams) {
+    
+    theParams << script.booleanParam(defaultValue: false,
+        description: 'Puplish to PYPI!', name: 'PUPBLISH2PYPI')
+
+    theParams
+}
+PropertiesHelper.defaultCICDProperties(this, 0, this.&addParameters)
+
 
 pythonVersion = [ '3.6', '3.7', '3.8', '3.9' ]
 
@@ -19,7 +31,6 @@ GlobalContext.put('appid', bparams.appid)
 
 common = new Common(this)
 buildsCommon = new BuildsCommon(this)
-
 
 void unittests(String version) {
     stage("unittest${version}") {
@@ -140,7 +151,7 @@ try {
     parallel(tasks)
     common.setResultIfNotSet(Constants.JSUCCESS)
     
-    if (env.BRANCH_NAME == 'master' && releaseBuild == 'Yes') {
+    if (env.BRANCH_NAME == 'master' && params.PUBLISH2PYPI) {
         uploadPackagePyPI()
     }
     
