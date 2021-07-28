@@ -71,7 +71,7 @@ void uploadPackagePyPI() {
             try {
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "PYPIPROD", usernameVariable: 'PYPIUSERNAME', passwordVariable: 'PYPIPASSWORD']]) {
                     sh
-                    """
+                    '''
                     version=$(python -c "import tenable;print (tenable.__version__)")
                     git tag -a $(version) -m "New Release"
                     git push --tags origin master
@@ -80,7 +80,7 @@ void uploadPackagePyPI() {
                     python setup.py sdist
                     pip install twine
                     twine upload --repository-url https://upload.pypi.org/legacy/ --skip-existing dist/* -u ${PYPIUSERNAME} -p ${PYPIPASSWORD}
-                    """
+                    '''
                 }
             } catch (ex) {
                 throw ex
