@@ -15,7 +15,7 @@ def addParameters(final script, def theParams) {
 PropertiesHelper.defaultCICDProperties(this,Constants.PROP_NOCONSEC | Constants.PROP_NOSCHEDULE, this.&addParameters)
 pythonVersion = [ '3.6', '3.7', '3.8', '3.9' ]
 bparams = new BuildParams(this, 1083)
-bparams.channels = '#jenkins-devel'
+bparams.channels = ['#jenkins-devel','#apis_delixus','#pytenable-dev']
 bparams.snykContainer = 'python:3.6-buster'
 bparams.snykRegistry = ''
 bparams.snykType = 'PYTHON'
@@ -145,7 +145,30 @@ try {
             }
         }
     }
+    tasks['runYamllint'] = {
+		stage('runYamllint') {
+			node(Constants.DOCKERNODE) {
+				buildsCommon.cleanup()
+				checkout scm
+               			withContainer(image: "python:3.6-buster", registry: '', inside: '-u root') {
+				try {
+					sh """
+	                    python -m pip install --upgrade pip
+		                pip install yamllint
+					"""
+					def lintOut = sh(script: 'yamllint -c .yamllint  --format=parsable  tests/io/cassettes tests/sc/cassettes tests/cs/cassettes || true', returnStdout: true)
+					lintOutTrimmed = lintOut.trim()
+				} catch(ex) {
+					throw ex
+				} finally {
+					print('YamlLint done')
+				}
+				}
+			}
+		}
+	}
 
+    
     parallel(tasks)
     common.setResultIfNotSet(Constants.JSUCCESS)
     
