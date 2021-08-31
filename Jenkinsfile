@@ -60,14 +60,10 @@ void unittests(String version) {
                 try {
                     sh """
                         export TIO_URL='https://qa-staging.cloud.aws.tenablesecurity.com'
-                        echo $TIO_URL
-
                         python -m pip install --upgrade pip
                         pip install -r test-requirements.txt
                         pip install -r requirements.txt
-
                         pytest --cov-report html:test-reports/coverage --junitxml=test-reports/junit/results.xml --junit-prefix=${version} --cov=tenable tests/io
-                        
                         find . -name *.html
                         find . -name *.xml
                     """
