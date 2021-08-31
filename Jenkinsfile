@@ -35,7 +35,7 @@ void unittests(String version) {
                                 passwordVariable  : 'QA_STAGING_ADMIN_secretkey']]) {
                                 try {
                                     sh """
-                                        export TIO_URL=https://qa-staging.cloud.aws.tenablesecurity.com
+                                        export TIO_URL='https://qa-staging.cloud.aws.tenablesecurity.com'
                                         export TIO_TEST_ADMIN_ACCESS=${QA_STAGING_ADMIN_accesskey}
                                         export TIO_TEST_ADMIN_SECRET=${QA_STAGING_ADMIN_secretkey}
                                         echo $TIO_URL
@@ -52,7 +52,7 @@ void unittests(String version) {
                                 passwordVariable  : 'QA_STAGING_STD_secretkey']]) {
                                 try {
                                     sh """
-                                        export TIO_URL=https://qa-staging.cloud.aws.tenablesecurity.com
+                                        export TIO_URL='https://qa-staging.cloud.aws.tenablesecurity.com'
                                         export TIO_TEST_STD_ACCESS=${QA_STAGING_STD_accesskey}
                                         export TIO_TEST_STD_SECRET=${QA_STAGING_STD_secretkey}
                                     """
