@@ -43,6 +43,7 @@ void unittests(String version) {
                                     """
                                 } catch(ex) {
                                     throw ex
+                                }
                 }
 
                 withCredentials([[$class          : 'UsernamePasswordMultiBinding',
@@ -57,6 +58,7 @@ void unittests(String version) {
                                     """
                                 } catch(ex) {
                                     throw ex
+                                }
                 }
 
                 try {
