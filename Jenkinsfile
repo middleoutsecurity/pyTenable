@@ -29,19 +29,20 @@ void unittests(String version) {
 
             withContainer(image: "python:${version}-buster", registry: '', inside: '-u root --privileged -v /var/run/docker.sock:/var/run/docker.sock') {
                 withCredentials([[$class          : 'UsernamePasswordMultiBinding',
-                                credentialsId     : 'QA_STAGING_ADMIN_API_KEYS',
-                                usernameVariable  : 'QA_STAGING_ADMIN_accesskey',
-                                passwordVariable  : 'QA_STAGING_ADMIN_secretkey'],
+                                string(credentialsId     : 'QA_STAGING_ADMIN_API_KEYS', variable : 'AdminKeys'),
+                                string(usernameVariable  : 'QA_STAGING_ADMIN_accesskey', variable : 'adminAccessKeys'),
+                                string(passwordVariable  : 'QA_STAGING_ADMIN_secretkey', variable : 'adminSecretKeys')],
                                 [ $class          : 'UsernamePasswordMultiBinding',
-                                credentialsId     : 'QA_STAGING_STD_API_KEYS',
-                                usernameVariable  : 'QA_STAGING_STD_accesskey',
-                                passwordVariable  : 'QA_STAGING_STD_secretkey']]) {
+                                string(credentialsId     : 'QA_STAGING_STD_API_KEYS', variable : 'StdKeys'),
+                                string(usernameVariable  : 'QA_STAGING_STD_accesskey', variable : 'StdAccessKeys'),
+                                string(passwordVariable  : 'QA_STAGING_STD_secretkey', variable : 'StdSecretKeys')]
+                                ]) {
                                     try {
                                         sh '''
-                                            export TIO_TEST_ADMIN_ACCESS=$QA_STAGING_ADMIN_accesskey
-                                            export TIO_TEST_ADMIN_SECRET=$QA_STAGING_ADMIN_secretkey
-                                            export TIO_TEST_STD_ACCESS=$QA_STAGING_STD_accesskey
-                                            export TIO_TEST_STD_SECRET=$QA_STAGING_STD_secretkey
+                                            export TIO_TEST_ADMIN_ACCESS=$adminAccessKeys
+                                            export TIO_TEST_ADMIN_SECRET=$adminSecretKeys
+                                            export TIO_TEST_STD_ACCESS=$StdAccessKeys
+                                            export TIO_TEST_STD_SECRET=$StdSecretKeys
                                         '''
                                     } catch(ex) {
                                         throw ex
