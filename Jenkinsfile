@@ -30,29 +30,22 @@ void unittests(String version) {
             withCredentials([[$class          : 'UsernamePasswordMultiBinding',
                             credentialsId     : 'QA_STAGING_ADMIN_API_KEYS',
                             usernameVariable  : 'QA_STAGING_ADMIN_accesskey',
-                            passwordVariable  : 'QA_STAGING_ADMIN_secretkey']]) {
-                            try {
-                                sh """
-                                    export TIO_TEST_ADMIN_ACCESS=${QA_STAGING_ADMIN_accesskey}
-                                    export TIO_TEST_ADMIN_SECRET=${QA_STAGING_ADMIN_secretkey}
-                                """
-                            } catch(ex) {
-                                throw ex
-                            }
-            }
-
-            withCredentials([[$class          : 'UsernamePasswordMultiBinding',
+                            passwordVariable  : 'QA_STAGING_ADMIN_secretkey'],
+                            [ $class          : 'UsernamePasswordMultiBinding',
                             credentialsId     : 'QA_STAGING_STD_API_KEYS',
                             usernameVariable  : 'QA_STAGING_STD_accesskey',
                             passwordVariable  : 'QA_STAGING_STD_secretkey']]) {
-                            try {
-                                sh """
-                                    export TIO_TEST_STD_ACCESS=${QA_STAGING_STD_accesskey}
-                                    export TIO_TEST_STD_SECRET=${QA_STAGING_STD_secretkey}
-                                """
-                            } catch(ex) {
-                                throw ex
-                            }
+                                try {
+                                    sh """
+                                        export TIO_URL='https://qa-staging.cloud.aws.tenablesecurity.com'
+                                        export TIO_TEST_ADMIN_ACCESS=$QA_STAGING_ADMIN_accesskey
+                                        export TIO_TEST_ADMIN_SECRET=$QA_STAGING_ADMIN_secretkey
+                                        export TIO_TEST_STD_ACCESS=$QA_STAGING_STD_accesskey
+                                        export TIO_TEST_STD_SECRET=$QA_STAGING_STD_secretkey
+                                    """
+                                } catch(ex) {
+                                    throw ex
+                                }
             }
 
             withContainer(image: "python:${version}-buster", registry: '', inside: '-u root --privileged -v /var/run/docker.sock:/var/run/docker.sock') {
