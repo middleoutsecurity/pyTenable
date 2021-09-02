@@ -78,6 +78,7 @@ from .current import CurrentSessionAPI
 from .files import FileAPI
 from .feeds import FeedAPI
 from .groups import GroupAPI
+from .job_queue import JobQueueAPI
 from .organizations import OrganizationAPI
 from .plugins import PluginAPI
 from .policies import ScanPolicyAPI
@@ -92,8 +93,6 @@ from .scan_zones import ScanZoneAPI
 from .status import StatusAPI
 from .system import SystemAPI
 from .users import UserAPI
-
-from .job_queue import JobQueueAPI
 
 import warnings, logging, semver
 
