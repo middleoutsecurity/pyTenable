@@ -92,6 +92,9 @@ from .scan_zones import ScanZoneAPI
 from .status import StatusAPI
 from .system import SystemAPI
 from .users import UserAPI
+
+from .job_queue import JobQueueAPI
+
 import warnings, logging, semver
 
 
@@ -442,3 +445,7 @@ class TenableSC(APISession):
     @property
     def users(self):
         return UserAPI(self)
+
+    @property
+    def jobs(self):
+        return JobQueueAPI(self)
